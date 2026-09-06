@@ -63,6 +63,7 @@ int main() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             tabuleiroBloqueado = false;
 =======
             spritesObstaculos.clear();
@@ -70,20 +71,28 @@ int main() {
 =======
 =======
 >>>>>>> 80c1e68 (feat: add modification to select random black piece as obstacle)
+=======
+>>>>>>> 80c1e68e614f51e87bc247136b9986f2ba895c54
             spritesObstaculos.clear();
 =======
             tabuleiroBloqueado = false;
 >>>>>>> 3c6406b (feat: add lock to the board when pathfinding algorithm is running)
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 7586841 (feat: add lock to the board when pathfinding algorithm is running)
 =======
+=======
+>>>>>>> 80c1e68e614f51e87bc247136b9986f2ba895c54
 =======
             tabuleiroBloqueado = false;
 =======
             spritesObstaculos.clear();
 >>>>>>> 1cc86ea (feat: add modification to select ramdom black piece as obstacle)
 >>>>>>> d0bc45c (feat: add modification to select ramdom black piece as obstacle)
+<<<<<<< HEAD
 >>>>>>> 80c1e68 (feat: add modification to select random black piece as obstacle)
+=======
+>>>>>>> 80c1e68e614f51e87bc247136b9986f2ba895c54
         }
 
         if (emAnimacao && !rotaFinal.empty()) {
