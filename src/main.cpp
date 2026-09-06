@@ -89,9 +89,27 @@ int main() {
                 numeroObstaculos++;
             }
         }
+        if (emAnimacao && !rotaFinal.empty()) {
+            if (passoAtual < rotaFinal.size() - 1) {
+                tempoAcumulado += GetFrameTime();
 
+                if (tempoAcumulado >= velocidadeSalto) {
+                    tempoAcumulado -= velocidadeSalto;
+                    passoAtual++;
+
+                    if (passoAtual >= rotaFinal.size() - 1) {
+                        emAnimacao = false;
+                        passoAtual = rotaFinal.size() - 1;
+                        tempoAcumulado = 0.0f;
+                    }
+                }
+            } else {
+                emAnimacao = false;
+            }
+        }
         BeginDrawing();
         ClearBackground(RAYWHITE);
+
 
         for (int y = 0; y < BOARD_SIZE; y++) {
             for (int x = 0; x < BOARD_SIZE; x++) {
@@ -101,9 +119,6 @@ int main() {
             }
         }
 
-        if (targetX != -1) {
-            DrawRectangle(targetX * TILE_SIZE, targetY * TILE_SIZE, TILE_SIZE, TILE_SIZE, RED);
-        }
 
         for (const auto& p: rotaFinal) {
             if ((p.x != startX || p.y != startY) && (p.x != targetX || p.y != targetY)) {
@@ -111,45 +126,67 @@ int main() {
             }
         }
 
+
         if (targetX != -1) {
             DrawRectangle(targetX * TILE_SIZE, targetY * TILE_SIZE, TILE_SIZE, TILE_SIZE, RED);
         }
-        
+
+
         for (const auto& obs : obstaculos) {
             DrawRectangle(obs.x * TILE_SIZE, obs.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, DARKGRAY);
-        
+
             if (blackPiecesSheet.id > 0) {
                 float spriteWidth = (float)blackPiecesSheet.width / 6.0f;
                 float spriteHeight = (float)blackPiecesSheet.height;
                 int spriteIndex = spritesObstaculos[obs];
                 Rectangle sourceRec = { spriteWidth * (float)spriteIndex, 0.0f, spriteWidth, spriteHeight };
                 Rectangle destRec = { (float)(obs.x * TILE_SIZE), (float)(obs.y * TILE_SIZE), (float)TILE_SIZE, (float)TILE_SIZE };
-            
+
                 DrawTexturePro(blackPiecesSheet, sourceRec, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
             }
         }
 
-        Posicao posCavalo = {startX, startY};
+
+        float drawX = startX * TILE_SIZE;
+        float drawY = startY * TILE_SIZE;
+
         if (!rotaFinal.empty() && startX != -1) {
-            posCavalo = rotaFinal[passoAtual];
+            if (emAnimacao && passoAtual < rotaFinal.size() - 1) {
+
+                float t = tempoAcumulado / velocidadeSalto;
+                if (t > 1.0f) t = 1.0f; // Clamp de segurança
+
+                Posicao posAtual = rotaFinal[passoAtual];
+                Posicao posProx  = rotaFinal[passoAtual + 1];
+
+
+                drawX = (posAtual.x + (posProx.x - posAtual.x) * t) * TILE_SIZE;
+                drawY = (posAtual.y + (posProx.y - posAtual.y) * t) * TILE_SIZE;
+            } else {
+
+                drawX = rotaFinal[passoAtual].x * TILE_SIZE;
+                drawY = rotaFinal[passoAtual].y * TILE_SIZE;
+            }
         }
 
+
         if (startX != -1) {
-            DrawRectangle(posCavalo.x * TILE_SIZE, posCavalo.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, GREEN);
-            
+            DrawRectangle(drawX, drawY, TILE_SIZE, TILE_SIZE, GREEN);
+
             if (whitePiecesSheet.id > 0) {
                 float spriteWidth = (float)whitePiecesSheet.width / 6.0f;
                 float spriteHeight = (float)whitePiecesSheet.height;
                 Rectangle sourceRec = { spriteWidth * 1.0f, 0.0f, spriteWidth, spriteHeight };
 
-                Rectangle destRec = { (float)(posCavalo.x * TILE_SIZE), (float)(posCavalo.y * TILE_SIZE), (float)TILE_SIZE, (float)TILE_SIZE };
+                Rectangle destRec = { drawX, drawY, (float)TILE_SIZE, (float)TILE_SIZE };
 
                 DrawTexturePro(whitePiecesSheet, sourceRec, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
-        
+
             } else {
-                DrawText("C", posCavalo.x * TILE_SIZE + 30, posCavalo.y * TILE_SIZE + 20, 32, DARKGREEN);
+                DrawText("C", drawX + 30, drawY + 20, 32, DARKGREEN);
             }
         }
+
 
         DrawRectangle(0, SCREEN_SIZE - 40, SCREEN_SIZE, 40, Fade(BLACK, 0.7f));
         DrawText("Esq: Inicio/Destino | Meio: Obstaculo | Dir: Limpar", 15, SCREEN_SIZE - 30, 16, RAYWHITE);
