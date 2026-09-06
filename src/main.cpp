@@ -7,6 +7,7 @@ const int TILE_SIZE = 80;
 const int SCREEN_SIZE = BOARD_SIZE * TILE_SIZE;
 
 bool emAnimacao = false;
+int numeroObstaculos = 0;
 size_t passoAtual = 0;
 float tempoAcumulado = 0.0f;
 float velocidadeSalto = 0.25f;
@@ -53,6 +54,7 @@ int main() {
             obstaculos.clear();
             emAnimacao = false;
             passoAtual = 0;
+            numeroObstaculos = 0;
         }
 
         if (emAnimacao && !rotaFinal.empty()) {
@@ -75,8 +77,10 @@ int main() {
             auto it = std::find(obstaculos.begin(), obstaculos.end(), obs);
             if (it != obstaculos.end()) {
                 obstaculos.erase(it);
-            } else {
+                numeroObstaculos--;
+            } else if (numeroObstaculos < 10) {
                 obstaculos.push_back(obs);
+                numeroObstaculos++;
             }
         }
 
