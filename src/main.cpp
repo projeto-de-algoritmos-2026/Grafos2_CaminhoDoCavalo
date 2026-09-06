@@ -61,10 +61,17 @@ int main() {
             passoAtual = 0;
             numeroObstaculos = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
             tabuleiroBloqueado = false;
 =======
             spritesObstaculos.clear();
 >>>>>>> 1cc86ea (feat: add modification to select ramdom black piece as obstacle)
+=======
+            spritesObstaculos.clear();
+=======
+            tabuleiroBloqueado = false;
+>>>>>>> 3c6406b (feat: add lock to the board when pathfinding algorithm is running)
+>>>>>>> 7586841 (feat: add lock to the board when pathfinding algorithm is running)
         }
 
         if (emAnimacao && !rotaFinal.empty()) {
