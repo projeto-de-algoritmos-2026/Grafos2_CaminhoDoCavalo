@@ -8,6 +8,7 @@ const int TILE_SIZE = 80;
 const int SCREEN_SIZE = BOARD_SIZE * TILE_SIZE;
 
 bool emAnimacao = false;
+bool tabuleiroBloqueado = false;
 int numeroObstaculos = 0;
 size_t passoAtual = 0;
 float tempoAcumulado = 0.0f;
@@ -29,7 +30,7 @@ int main() {
     std::map<Posicao, int> spritesObstaculos;
 
     while (!WindowShouldClose()) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !tabuleiroBloqueado) {
             int gridX = GetMouseX() / TILE_SIZE;
             int gridY = GetMouseY() / TILE_SIZE;
 
@@ -41,6 +42,7 @@ int main() {
                 targetY = gridY;
 
                 rotaFinal = encontrarCaminhoCavalo({startX, startY}, {targetX, targetY}, obstaculos);
+                tabuleiroBloqueado = true;
                 
                 if (!rotaFinal.empty()) {
                     emAnimacao = true;
@@ -58,7 +60,11 @@ int main() {
             emAnimacao = false;
             passoAtual = 0;
             numeroObstaculos = 0;
+<<<<<<< HEAD
             spritesObstaculos.clear();
+=======
+            tabuleiroBloqueado = false;
+>>>>>>> 3c6406b (feat: add lock to the board when pathfinding algorithm is running)
         }
 
         if (emAnimacao && !rotaFinal.empty()) {
@@ -73,7 +79,7 @@ int main() {
             }
         }
 
-        if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) {
+        if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) && !tabuleiroBloqueado) {
             int gridX = GetMouseX() / TILE_SIZE;
             int gridY = GetMouseY() / TILE_SIZE;
             Posicao obs = {gridX, gridY};
