@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include <vector>
 #include "grafo.h"
+#include <map>
 
 const int BOARD_SIZE = 8;
 const int TILE_SIZE = 80;
@@ -25,6 +26,8 @@ int main() {
     int targetX = -1, targetY = -1;
     std::vector<Posicao> rotaFinal;
     std::vector<Posicao> obstaculos;
+
+    std::map<Posicao, int> spritesObstaculos;
 
     while (!WindowShouldClose()) {
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !tabuleiroBloqueado) {
@@ -58,6 +61,7 @@ int main() {
             passoAtual = 0;
             numeroObstaculos = 0;
             tabuleiroBloqueado = false;
+            spritesObstaculos.clear();
         }
 
         if (emAnimacao && !rotaFinal.empty()) {
@@ -80,9 +84,11 @@ int main() {
             auto it = std::find(obstaculos.begin(), obstaculos.end(), obs);
             if (it != obstaculos.end()) {
                 obstaculos.erase(it);
+                spritesObstaculos.erase(obs);
                 numeroObstaculos--;
             } else if (numeroObstaculos < 10) {
                 obstaculos.push_back(obs);
+                spritesObstaculos[obs] = GetRandomValue(0,5);
                 numeroObstaculos++;
             }
         }
@@ -135,8 +141,8 @@ int main() {
             if (blackPiecesSheet.id > 0) {
                 float spriteWidth = (float)blackPiecesSheet.width / 6.0f;
                 float spriteHeight = (float)blackPiecesSheet.height;
-
-                Rectangle sourceRec = { spriteWidth * 2.0f, 0.0f, spriteWidth, spriteHeight };
+                int spriteIndex = spritesObstaculos[obs];
+                Rectangle sourceRec = { spriteWidth * (float)spriteIndex, 0.0f, spriteWidth, spriteHeight };
                 Rectangle destRec = { (float)(obs.x * TILE_SIZE), (float)(obs.y * TILE_SIZE), (float)TILE_SIZE, (float)TILE_SIZE };
 
                 DrawTexturePro(blackPiecesSheet, sourceRec, destRec, { 0.0f, 0.0f }, 0.0f, WHITE);
